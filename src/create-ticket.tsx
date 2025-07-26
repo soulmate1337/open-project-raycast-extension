@@ -30,7 +30,7 @@ function SearchTickets() {
     } catch (error) {
       showToast({
         style: Toast.Style.Failure,
-        title: "Configuration Error", 
+        title: "Configuration Error",
         message: "Please check your OpenProject settings",
       });
     }

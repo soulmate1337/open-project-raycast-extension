@@ -28,12 +28,16 @@ interface UpdateTicketArguments {
   ticketId?: string;
 }
 
-export default function UpdateTicket(props: LaunchProps<{ arguments: UpdateTicketArguments }>) {
+export default function UpdateTicket(
+  props: LaunchProps<{ arguments: UpdateTicketArguments }>,
+) {
   const { pop } = useNavigation();
   const [searchText, setSearchText] = useState("");
   const [tickets, setTickets] = useState<WorkPackage[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [selectedTicket, setSelectedTicket] = useState<WorkPackage | null>(null);
+  const [selectedTicket, setSelectedTicket] = useState<WorkPackage | null>(
+    null,
+  );
   const [users, setUsers] = useState<User[]>([]);
   const [priorities, setPriorities] = useState<any[]>([]);
   const [statuses, setStatuses] = useState<any[]>([]);
@@ -59,14 +63,14 @@ export default function UpdateTicket(props: LaunchProps<{ arguments: UpdateTicke
       try {
         const apiInstance = new OpenProjectAPI();
         setApi(apiInstance);
-        
+
         // Lade Basis-Daten
         const [usersData, prioritiesData, statusesData] = await Promise.all([
           apiInstance.getUsers(),
           apiInstance.getPriorities(),
           apiInstance.getStatuses(),
         ]);
-        
+
         setUsers(usersData);
         setPriorities(prioritiesData);
         setStatuses(statusesData);
@@ -74,7 +78,9 @@ export default function UpdateTicket(props: LaunchProps<{ arguments: UpdateTicke
         // Wenn Ticket-ID als Argument übergeben wurde
         if (props.arguments?.ticketId) {
           try {
-            const ticket = await apiInstance.getWorkPackage(parseInt(props.arguments.ticketId));
+            const ticket = await apiInstance.getWorkPackage(
+              parseInt(props.arguments.ticketId),
+            );
             setSelectedTicket(ticket);
           } catch (error) {
             showToast({
@@ -154,7 +160,7 @@ export default function UpdateTicket(props: LaunchProps<{ arguments: UpdateTicke
 
     try {
       setIsLoading(true);
-      
+
       const toast = await showToast({
         style: Toast.Style.Animated,
         title: "Updating ticket...",
@@ -168,9 +174,18 @@ export default function UpdateTicket(props: LaunchProps<{ arguments: UpdateTicke
         id: selectedTicket.id,
         subject: values.subject?.trim(),
         description: values.description?.trim(),
-        assigneeId: values.assignee && values.assignee !== "" ? parseInt(values.assignee) : 0,
-        priorityId: values.priority && values.priority !== "" ? parseInt(values.priority) : undefined,
-        statusId: values.status && values.status !== "" ? parseInt(values.status) : undefined,
+        assigneeId:
+          values.assignee && values.assignee !== ""
+            ? parseInt(values.assignee)
+            : 0,
+        priorityId:
+          values.priority && values.priority !== ""
+            ? parseInt(values.priority)
+            : undefined,
+        statusId:
+          values.status && values.status !== ""
+            ? parseInt(values.status)
+            : undefined,
       };
 
       console.log("Update data:", updateData);
@@ -184,18 +199,23 @@ export default function UpdateTicket(props: LaunchProps<{ arguments: UpdateTicke
       pop();
     } catch (err: any) {
       let errorMessage = "Unknown error";
-      
+
       console.error("Update error:", err);
-      
+
       if (err.message?.includes("422")) {
-        errorMessage = "Invalid data format. Please check all fields are filled correctly.";
-      } else if (err.message?.includes("Conflict") || err.message?.includes("409")) {
-        errorMessage = "Ticket was modified by someone else. Please select the ticket again to get the latest version.";
+        errorMessage =
+          "Invalid data format. Please check all fields are filled correctly.";
+      } else if (
+        err.message?.includes("Conflict") ||
+        err.message?.includes("409")
+      ) {
+        errorMessage =
+          "Ticket was modified by someone else. Please select the ticket again to get the latest version.";
         setSelectedTicket(null);
       } else {
         errorMessage = err.message || "Unknown error";
       }
-      
+
       showToast({
         style: Toast.Style.Failure,
         title: "Error updating ticket",
@@ -220,7 +240,9 @@ export default function UpdateTicket(props: LaunchProps<{ arguments: UpdateTicke
         searchBarPlaceholder="Search for ticket to update..."
         throttle={true}
       >
-        {tickets.length === 0 && searchText.trim().length > 0 && !isSearching ? (
+        {tickets.length === 0 &&
+        searchText.trim().length > 0 &&
+        !isSearching ? (
           <ListEmptyView
             icon={Icon.MagnifyingGlass}
             title="No tickets found"
@@ -266,7 +288,11 @@ export default function UpdateTicket(props: LaunchProps<{ arguments: UpdateTicke
       isLoading={isLoading}
       actions={
         <ActionPanelComponent>
-          <SubmitFormAction onSubmit={handleSubmit} title="Update Ticket" icon={Icon.Check} />
+          <SubmitFormAction
+            onSubmit={handleSubmit}
+            title="Update Ticket"
+            icon={Icon.Check}
+          />
           <ActionComponent
             title="Select Different Ticket"
             onAction={() => setSelectedTicket(null)}

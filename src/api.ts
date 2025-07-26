@@ -58,7 +58,7 @@ export interface WorkPackage {
   };
   createdAt: string;
   updatedAt: string;
-  lockVersion?: number;  // Wichtig für Updates
+  lockVersion?: number; // Wichtig für Updates
 }
 
 export interface UpdateWorkPackageRequest {
@@ -94,27 +94,31 @@ class OpenProjectAPI {
     return this._baseURL;
   }
 
-  private async makeRequest(endpoint: string, options: RequestInit = {}): Promise<any> {
+  private async makeRequest(
+    endpoint: string,
+    options: RequestInit = {},
+  ): Promise<any> {
     const url = `${this._baseURL}/api/v3${endpoint}`;
-    
-    const response = await fetch(url, {
+
+    const response = (await fetch(url, {
       ...options,
       headers: {
-        "Authorization": `Basic ${Buffer.from(`apikey:${this.apiKey}`).toString("base64")}`,
+        Authorization: `Basic ${Buffer.from(`apikey:${this.apiKey}`).toString("base64")}`,
         "Content-Type": "application/json",
         ...options.headers,
       },
-    }) as Response;
+    })) as Response;
 
     if (!response.ok) {
       const errorText = await response.text();
       let errorMessage = `OpenProject API error: ${response.status} ${response.statusText}`;
-      
+
       // Spezielle Behandlung für 409 Conflicts
       if (response.status === 409) {
-        errorMessage = "Conflict: Ticket was modified by someone else or is locked";
+        errorMessage =
+          "Conflict: Ticket was modified by someone else or is locked";
       }
-      
+
       // Versuche JSON Error Details zu parsen
       try {
         const errorData = JSON.parse(errorText);
@@ -124,7 +128,7 @@ class OpenProjectAPI {
       } catch {
         // Ignoriere JSON Parse Fehler
       }
-      
+
       throw new Error(errorMessage);
     }
 
@@ -151,21 +155,26 @@ class OpenProjectAPI {
     return response._embedded?.elements || [];
   }
 
-  async updateWorkPackage(data: UpdateWorkPackageRequest): Promise<WorkPackage> {
+  async updateWorkPackage(
+    data: UpdateWorkPackageRequest,
+  ): Promise<WorkPackage> {
     // Erst aktuelles Ticket laden für lockVersion
     const currentTicket = await this.getWorkPackage(data.id);
-    
+
     const payload: any = {
-      lockVersion: currentTicket.lockVersion || 0  // Wichtig für Conflict-Vermeidung
+      lockVersion: currentTicket.lockVersion || 0, // Wichtig für Conflict-Vermeidung
     };
-    
+
     if (data.subject && data.subject !== currentTicket.subject) {
       payload.subject = data.subject;
     }
-    if (data.description && data.description !== currentTicket.description?.raw) {
+    if (
+      data.description &&
+      data.description !== currentTicket.description?.raw
+    ) {
       payload.description = { raw: data.description };
     }
-    
+
     const links: any = {};
     if (data.assigneeId && data.assigneeId !== currentTicket.assignee?.id) {
       links.assignee = { href: `/api/v3/users/${data.assigneeId}` };
@@ -176,13 +185,14 @@ class OpenProjectAPI {
     if (data.statusId && data.statusId !== currentTicket.status?.id) {
       links.status = { href: `/api/v3/statuses/${data.statusId}` };
     }
-    
+
     if (Object.keys(links).length > 0) {
       payload._links = links;
     }
 
     // Wenn keine Änderungen, return current ticket
-    if (Object.keys(payload).length === 1) { // nur lockVersion
+    if (Object.keys(payload).length === 1) {
+      // nur lockVersion
       return currentTicket;
     }
 
@@ -192,12 +202,14 @@ class OpenProjectAPI {
         body: JSON.stringify(payload),
         headers: {
           "Content-Type": "application/json",
-          "If-Match": currentTicket.lockVersion?.toString() || "0"
+          "If-Match": currentTicket.lockVersion?.toString() || "0",
         },
       });
     } catch (error: any) {
       if (error.message?.includes("409")) {
-        throw new Error("Ticket was modified by someone else. Please try again.");
+        throw new Error(
+          "Ticket was modified by someone else. Please try again.",
+        );
       }
       throw error;
     }
@@ -208,7 +220,9 @@ class OpenProjectAPI {
     return response._embedded?.elements || [];
   }
 
-  async createWorkPackage(data: CreateWorkPackageRequest): Promise<WorkPackage> {
+  async createWorkPackage(
+    data: CreateWorkPackageRequest,
+  ): Promise<WorkPackage> {
     const payload = {
       subject: data.subject,
       description: {
@@ -242,7 +256,9 @@ class OpenProjectAPI {
 
   async searchWorkPackages(query: string): Promise<WorkPackage[]> {
     const encodedQuery = encodeURIComponent(query);
-    const response: any = await this.makeRequest(`/work_packages?filters=[{"subject":{"operator":"~","values":["${encodedQuery}"]}}]`);
+    const response: any = await this.makeRequest(
+      `/work_packages?filters=[{"subject":{"operator":"~","values":["${encodedQuery}"]}}]`,
+    );
     return response._embedded?.elements || [];
   }
 
