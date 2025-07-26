@@ -26,14 +26,6 @@
       "icon": "plus-circle-filled"
     },
     {
-      "name": "search-tickets",
-      "title": "Search Tickets",
-      "subtitle": "OpenProject",
-      "description": "Search for tickets in OpenProject",
-      "mode": "view",
-      "icon": "magnifying-glass"
-    },
-    {
       "name": "update-ticket",
       "title": "Update Ticket",
       "subtitle": "OpenProject",

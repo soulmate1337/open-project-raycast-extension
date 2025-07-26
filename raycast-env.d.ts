@@ -20,8 +20,6 @@ declare type Preferences = ExtensionPreferences
 declare namespace Preferences {
   /** Preferences accessible in the `create-ticket` command */
   export type CreateTicket = ExtensionPreferences & {}
-  /** Preferences accessible in the `search-tickets` command */
-  export type SearchTickets = ExtensionPreferences & {}
   /** Preferences accessible in the `update-ticket` command */
   export type UpdateTicket = ExtensionPreferences & {}
 }
@@ -29,8 +27,6 @@ declare namespace Preferences {
 declare namespace Arguments {
   /** Arguments passed to the `create-ticket` command */
   export type CreateTicket = {}
-  /** Arguments passed to the `search-tickets` command */
-  export type SearchTickets = {}
   /** Arguments passed to the `update-ticket` command */
   export type UpdateTicket = {}
 }
