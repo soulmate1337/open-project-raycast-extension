@@ -1,10 +1,10 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "openproject",
-  "title": "OpenProject - Unofficial",
-  "description": "Manage your OpenProject tasks and tickets directly from Raycast",
+  "title": "OpenProject",
+  "description": "Unofficial extension to manage your OpenProject tasks and tickets directly from Raycast",
   "icon": "openproject-icon.png",
-  "author": "Alexander Sattler",
+  "author": "Alexander_Sattler",
   "license": "MIT",
   "categories": ["Productivity", "Developer Tools"],
   "keywords": ["openproject", "project management", "tickets", "tasks"],
