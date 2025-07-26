@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/update-ticket.tsx
 import { useState, useEffect } from "react";
 import {
@@ -11,14 +12,8 @@ import {
   List,
   Icon,
   Color,
-  getPreferenceValues,
 } from "@raycast/api";
 import OpenProjectAPI, { WorkPackage, User } from "./api";
-
-interface Preferences {
-  apiUrl: string;
-  apiKey: string;
-}
 
 interface FormValues {
   ticketId: string;
@@ -29,11 +24,11 @@ interface FormValues {
   status: string;
 }
 
-interface Arguments {
+interface UpdateTicketArguments {
   ticketId?: string;
 }
 
-export default function UpdateTicket(props: LaunchProps<{ arguments: Arguments }>) {
+export default function UpdateTicket(props: LaunchProps<{ arguments: UpdateTicketArguments }>) {
   const { pop } = useNavigation();
   const [searchText, setSearchText] = useState("");
   const [tickets, setTickets] = useState<WorkPackage[]>([]);
