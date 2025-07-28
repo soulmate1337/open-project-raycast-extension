@@ -1,14 +1,6 @@
 // @ts-nocheck - Required due to Raycast API JSX component type incompatibility
 // src/create-ticket.tsx
-import {
-  Action,
-  ActionPanel,
-  Form,
-  showToast,
-  Toast,
-  useNavigation,
-  LaunchProps,
-} from "@raycast/api";
+import { Action, ActionPanel, Form, showToast, Toast, useNavigation, LaunchProps } from "@raycast/api";
 import { useState, useEffect } from "react";
 import OpenProjectAPI, { Project, WorkPackageType, User } from "./api";
 
@@ -105,23 +97,17 @@ export default function CreateTicket(props: LaunchProps<{ arguments: CreateTicke
       <Form
         actions={
           <ActionPanel>
-            <Action.OpenInBrowser
-              title="Open Raycast Preferences"
-              url="raycast://extensions/openproject"
-            />
-            <Action.OpenInBrowser
-              title="Visit OpenProject Website"
-              url="https://www.openproject.org"
-            />
+            <Action.OpenInBrowser title="Open Raycast Preferences" url="raycast://extensions/openproject" />
+            <Action.OpenInBrowser title="Visit Openproject Website" url="https://www.openproject.org" />
           </ActionPanel>
         }
       >
         <Form.Description text={`Error: ${error}`} />
         <Form.Description text="Please check your OpenProject settings in Raycast preferences." />
         <Form.Separator />
-        <Form.Description 
-          title="ℹ️ Disclaimer" 
-          text="This is an unofficial community extension. Not affiliated with OpenProject GmbH." 
+        <Form.Description
+          title="ℹ️ Disclaimer"
+          text="This is an unofficial community extension. Not affiliated with OpenProject GmbH."
         />
       </Form>
     );
@@ -152,12 +138,7 @@ export default function CreateTicket(props: LaunchProps<{ arguments: CreateTicke
 
       <Form.Dropdown id="project" title="Project" placeholder="Select project">
         {projects.map((project) => (
-          <Form.Dropdown.Item
-            key={project.id}
-            value={project.id.toString()}
-            title={project.name}
-            icon="📁"
-          />
+          <Form.Dropdown.Item key={project.id} value={project.id.toString()} title={project.name} icon="📁" />
         ))}
       </Form.Dropdown>
 
@@ -175,23 +156,13 @@ export default function CreateTicket(props: LaunchProps<{ arguments: CreateTicke
       <Form.Dropdown id="assignee" title="Assignee" placeholder="Select assignee (optional)">
         <Form.Dropdown.Item value="" title="Unassigned" icon="👤" />
         {users.map((user) => (
-          <Form.Dropdown.Item
-            key={user.id}
-            value={user.id.toString()}
-            title={user.name}
-            icon="👤"
-          />
+          <Form.Dropdown.Item key={user.id} value={user.id.toString()} title={user.name} icon="👤" />
         ))}
       </Form.Dropdown>
 
       <Form.Dropdown id="priority" title="Priority" placeholder="Select priority (optional)">
         {priorities.map((priority) => (
-          <Form.Dropdown.Item
-            key={priority.id}
-            value={priority.id.toString()}
-            title={priority.name}
-            icon="🔥"
-          />
+          <Form.Dropdown.Item key={priority.id} value={priority.id.toString()} title={priority.name} icon="🔥" />
         ))}
       </Form.Dropdown>
     </Form>

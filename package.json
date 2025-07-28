@@ -1,7 +1,7 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "openproject",
-  "title": "Openproject",
+  "title": "OpenProject",
   "description": "Unofficial extension to manage your OpenProject tasks and tickets directly from Raycast",
   "icon": "openproject-icon.png",
   "author": "alexander_sattler",

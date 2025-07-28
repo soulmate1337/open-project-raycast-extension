@@ -28,22 +28,17 @@ interface UpdateTicketArguments {
   ticketId?: string;
 }
 
-export default function UpdateTicket(
-  props: LaunchProps<{ arguments: UpdateTicketArguments }>,
-) {
+export default function UpdateTicket(props: LaunchProps<{ arguments: UpdateTicketArguments }>) {
   const { pop } = useNavigation();
   const [searchText, setSearchText] = useState("");
   const [tickets, setTickets] = useState<WorkPackage[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [selectedTicket, setSelectedTicket] = useState<WorkPackage | null>(
-    null,
-  );
+  const [selectedTicket, setSelectedTicket] = useState<WorkPackage | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [priorities, setPriorities] = useState<any[]>([]);
   const [statuses, setStatuses] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [api, setApi] = useState<OpenProjectAPI | null>(null);
-
 
   useEffect(() => {
     async function initializeAPI() {
@@ -65,9 +60,7 @@ export default function UpdateTicket(
         // Wenn Ticket-ID als Argument übergeben wurde
         if (props.arguments?.ticketId) {
           try {
-            const ticket = await apiInstance.getWorkPackage(
-              parseInt(props.arguments.ticketId),
-            );
+            const ticket = await apiInstance.getWorkPackage(parseInt(props.arguments.ticketId));
             setSelectedTicket(ticket);
           } catch (error) {
             showToast({
@@ -161,18 +154,9 @@ export default function UpdateTicket(
         id: selectedTicket.id,
         subject: values.subject?.trim(),
         description: values.description?.trim(),
-        assigneeId:
-          values.assignee && values.assignee !== ""
-            ? parseInt(values.assignee)
-            : 0,
-        priorityId:
-          values.priority && values.priority !== ""
-            ? parseInt(values.priority)
-            : undefined,
-        statusId:
-          values.status && values.status !== ""
-            ? parseInt(values.status)
-            : undefined,
+        assigneeId: values.assignee && values.assignee !== "" ? parseInt(values.assignee) : 0,
+        priorityId: values.priority && values.priority !== "" ? parseInt(values.priority) : undefined,
+        statusId: values.status && values.status !== "" ? parseInt(values.status) : undefined,
       };
 
       console.log("Update data:", updateData);
@@ -190,14 +174,9 @@ export default function UpdateTicket(
       console.error("Update error:", err);
 
       if (err.message?.includes("422")) {
-        errorMessage =
-          "Invalid data format. Please check all fields are filled correctly.";
-      } else if (
-        err.message?.includes("Conflict") ||
-        err.message?.includes("409")
-      ) {
-        errorMessage =
-          "Ticket was modified by someone else. Please select the ticket again to get the latest version.";
+        errorMessage = "Invalid data format. Please check all fields are filled correctly.";
+      } else if (err.message?.includes("Conflict") || err.message?.includes("409")) {
+        errorMessage = "Ticket was modified by someone else. Please select the ticket again to get the latest version.";
         setSelectedTicket(null);
       } else {
         errorMessage = err.message || "Unknown error";
@@ -227,9 +206,7 @@ export default function UpdateTicket(
         searchBarPlaceholder="Search for ticket to update..."
         throttle={true}
       >
-        {tickets.length === 0 &&
-        searchText.trim().length > 0 &&
-        !isSearching ? (
+        {tickets.length === 0 && searchText.trim().length > 0 && !isSearching ? (
           <List.EmptyView
             icon={Icon.MagnifyingGlass}
             title="No tickets found"
@@ -255,11 +232,7 @@ export default function UpdateTicket(
               ]}
               actions={
                 <ActionPanel>
-                  <Action
-                    title="Select Ticket"
-                    onAction={() => selectTicket(ticket)}
-                    icon={Icon.Pencil}
-                  />
+                  <Action title="Select Ticket" onAction={() => selectTicket(ticket)} icon={Icon.Pencil} />
                 </ActionPanel>
               }
             />
@@ -275,11 +248,7 @@ export default function UpdateTicket(
       isLoading={isLoading}
       actions={
         <ActionPanel>
-          <Action.SubmitForm
-            onSubmit={handleSubmit}
-            title="Update Ticket"
-            icon={Icon.Check}
-          />
+          <Action.SubmitForm onSubmit={handleSubmit} title="Update Ticket" icon={Icon.Check} />
           <Action
             title="Select Different Ticket"
             onAction={() => setSelectedTicket(null)}
@@ -316,12 +285,7 @@ export default function UpdateTicket(
       >
         <Form.Dropdown.Item value="" title="Unassigned" icon="👤" />
         {users.map((user) => (
-          <Form.Dropdown.Item
-            key={user.id}
-            value={user.id.toString()}
-            title={user.name}
-            icon="👤"
-          />
+          <Form.Dropdown.Item key={user.id} value={user.id.toString()} title={user.name} icon="👤" />
         ))}
       </Form.Dropdown>
 
@@ -332,12 +296,7 @@ export default function UpdateTicket(
         defaultValue={selectedTicket.priority?.id.toString() || ""}
       >
         {priorities.map((priority) => (
-          <Form.Dropdown.Item
-            key={priority.id}
-            value={priority.id.toString()}
-            title={priority.name}
-            icon="🔥"
-          />
+          <Form.Dropdown.Item key={priority.id} value={priority.id.toString()} title={priority.name} icon="🔥" />
         ))}
       </Form.Dropdown>
 
@@ -348,12 +307,7 @@ export default function UpdateTicket(
         defaultValue={selectedTicket.status?.id.toString() || ""}
       >
         {statuses.map((status) => (
-          <Form.Dropdown.Item
-            key={status.id}
-            value={status.id.toString()}
-            title={status.name}
-            icon="⚫"
-          />
+          <Form.Dropdown.Item key={status.id} value={status.id.toString()} title={status.name} icon="⚫" />
         ))}
       </Form.Dropdown>
     </Form>
