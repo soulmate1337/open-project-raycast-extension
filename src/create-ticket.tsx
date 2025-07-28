@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck - Required due to Raycast API JSX component type incompatibility
 // src/create-ticket.tsx
 import {
   Action,
