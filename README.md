@@ -82,7 +82,6 @@ npm run fix-lint
 src/
 ├── api.ts              # OpenProject API client
 ├── create-ticket.tsx   # Create ticket command
-├── search-tickets.tsx  # Search tickets command
 └── update-ticket.tsx   # Update ticket command
 ```
 
