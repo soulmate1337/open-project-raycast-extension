@@ -26,7 +26,7 @@ class OpenProjectAPI {
     this.apiKey = preferences.apiKey;
   }
 
-  // Getter für baseURL (wird in search-tickets.tsx verwendet)
+  // Getter for baseURL (used in search-tickets.tsx)
   get baseURL(): string {
     return this._baseURL;
   }
@@ -47,19 +47,19 @@ class OpenProjectAPI {
       const errorText = await response.text();
       let errorMessage = `OpenProject API error: ${response.status} ${response.statusText}`;
 
-      // Spezielle Behandlung für 409 Conflicts
+      // Special handling for 409 Conflicts
       if (response.status === 409) {
         errorMessage = "Conflict: Ticket was modified by someone else or is locked";
       }
 
-      // Versuche JSON Error Details zu parsen
+      // Try to parse JSON error details
       try {
         const errorData = JSON.parse(errorText);
         if (errorData.message) {
           errorMessage += ` - ${errorData.message}`;
         }
       } catch {
-        // Ignoriere JSON Parse Fehler
+        // Ignore JSON parse errors
       }
 
       throw new Error(errorMessage);
@@ -89,11 +89,11 @@ class OpenProjectAPI {
   }
 
   async updateWorkPackage(data: UpdateWorkPackageRequest): Promise<WorkPackage> {
-    // Erst aktuelles Ticket laden für lockVersion
+    // First load current ticket for lockVersion
     const currentTicket = await this.getWorkPackage(data.id);
 
     const payload: any = {
-      lockVersion: currentTicket.lockVersion || 0, // Wichtig für Conflict-Vermeidung
+      lockVersion: currentTicket.lockVersion || 0, // Important for conflict prevention
     };
 
     if (data.subject && data.subject !== currentTicket.subject) {
@@ -118,9 +118,9 @@ class OpenProjectAPI {
       payload._links = links;
     }
 
-    // Wenn keine Änderungen, return current ticket
+    // If no changes, return current ticket
     if (Object.keys(payload).length === 1) {
-      // nur lockVersion
+      // only lockVersion
       return currentTicket;
     }
 

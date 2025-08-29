@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { List, showToast, Toast } from "@raycast/api";
+import { List } from "@raycast/api";
+import { showFailureToast } from "@raycast/utils";
 import { WorkPackage } from "../types";
 import { TicketListItem, EmptyView } from "./";
 import OpenProjectAPI from "../api";
@@ -32,24 +33,22 @@ export function SearchTickets({ onSelect, initialTicketId }: SearchTicketsProps)
             const ticket = await apiInstance.getWorkPackage(parseInt(initialTicketId));
             onSelect(ticket);
           } catch (error) {
-            showToast({
-              style: Toast.Style.Failure,
-              title: "Ticket not found",
-              message: `Ticket #${initialTicketId} could not be loaded`,
+            showFailureToast(error, { 
+              title: "Ticket not found", 
+              message: `Ticket #${initialTicketId} could not be loaded` 
             });
           }
         }
       } catch (error) {
-        showToast({
-          style: Toast.Style.Failure,
-          title: "Configuration Error",
-          message: "Please check your OpenProject settings in Raycast preferences",
+        showFailureToast(error, { 
+          title: "Configuration Error", 
+          message: "Please check your OpenProject settings in Raycast preferences" 
         });
       }
     }
 
     initializeAPI();
-  }, [initialTicketId]);
+  }, [initialTicketId, onSelect]);
 
   useEffect(() => {
     if (!api || searchText.trim().length === 0) {
@@ -63,11 +62,7 @@ export function SearchTickets({ onSelect, initialTicketId }: SearchTicketsProps)
         const results = await api.searchWorkPackages(searchText);
         setTickets(results);
       } catch (error) {
-        showToast({
-          style: Toast.Style.Failure,
-          title: "Search failed",
-          message: error instanceof Error ? error.message : "Unknown error",
-        });
+        showFailureToast(error, { title: "Search failed" });
         setTickets([]);
       } finally {
         setIsSearching(false);

@@ -1,7 +1,10 @@
 import { Action, ActionPanel, Form, showToast, Toast, useNavigation, Icon } from "@raycast/api";
+import { showFailureToast } from "@raycast/utils";
 import { useState, useEffect } from "react";
 import { UpdateTicketFormValues, WorkPackage, User, Priority, Status } from "../types";
 import OpenProjectAPI from "../api";
+
+const api = new OpenProjectAPI();
 
 interface UpdateTicketFormProps {
   ticket: WorkPackage;
@@ -16,8 +19,6 @@ export function UpdateTicketForm({ ticket, onSuccess, onBack }: UpdateTicketForm
   const [statuses, setStatuses] = useState<Status[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingForm, setIsLoadingForm] = useState(true);
-
-  const api = new OpenProjectAPI();
 
   useEffect(() => {
     async function loadFormData() {
@@ -34,11 +35,7 @@ export function UpdateTicketForm({ ticket, onSuccess, onBack }: UpdateTicketForm
         setPriorities(prioritiesData);
         setStatuses(statusesData);
       } catch (error) {
-        showToast({
-          style: Toast.Style.Failure,
-          title: "Error loading form data",
-          message: error instanceof Error ? error.message : "Unknown error",
-        });
+        showFailureToast(error, { title: "Error loading form data" });
       } finally {
         setIsLoadingForm(false);
       }
@@ -84,11 +81,7 @@ export function UpdateTicketForm({ ticket, onSuccess, onBack }: UpdateTicketForm
         errorMessage = err.message || "Unknown error";
       }
 
-      showToast({
-        style: Toast.Style.Failure,
-        title: "Error updating ticket",
-        message: errorMessage,
-      });
+      showFailureToast(err, { title: "Error updating ticket", message: errorMessage });
     } finally {
       setIsLoading(false);
     }

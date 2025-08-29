@@ -1,7 +1,10 @@
 import { Action, ActionPanel, Form, showToast, Toast, useNavigation } from "@raycast/api";
+import { showFailureToast } from "@raycast/utils";
 import { useState, useEffect } from "react";
 import { CreateTicketFormValues, Project, WorkPackageType, User, Priority } from "../types";
 import OpenProjectAPI from "../api";
+
+const api = new OpenProjectAPI();
 
 interface CreateTicketFormProps {
   initialValues?: Partial<CreateTicketFormValues>;
@@ -16,8 +19,6 @@ export function CreateTicketForm({ initialValues, onSuccess }: CreateTicketFormP
   const [priorities, setPriorities] = useState<Priority[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const api = new OpenProjectAPI();
 
   useEffect(() => {
     async function loadFormData() {
@@ -44,11 +45,7 @@ export function CreateTicketForm({ initialValues, onSuccess }: CreateTicketFormP
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "An error occurred";
         setError(errorMessage);
-        showToast({
-          style: Toast.Style.Failure,
-          title: "Error loading form data",
-          message: errorMessage,
-        });
+        showFailureToast(err, { title: "Error loading form data" });
       } finally {
         setIsLoading(false);
       }
@@ -80,11 +77,7 @@ export function CreateTicketForm({ initialValues, onSuccess }: CreateTicketFormP
       onSuccess?.();
       pop();
     } catch (err) {
-      showToast({
-        style: Toast.Style.Failure,
-        title: "Error creating ticket",
-        message: err instanceof Error ? err.message : "Unknown error",
-      });
+      showFailureToast(err, { title: "Error creating ticket" });
     }
   }
 
@@ -93,7 +86,7 @@ export function CreateTicketForm({ initialValues, onSuccess }: CreateTicketFormP
       <Form
         actions={
           <ActionPanel>
-            <Action.OpenInBrowser title="Visit Openproject Website" url="https://www.openproject.org" />
+            <Action.OpenInBrowser title="Visit OpenProject Website" url="https://www.openproject.org" />
           </ActionPanel>
         }
       >
