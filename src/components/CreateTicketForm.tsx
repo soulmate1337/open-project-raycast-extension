@@ -86,7 +86,7 @@ export function CreateTicketForm({ initialValues, onSuccess }: CreateTicketFormP
       <Form
         actions={
           <ActionPanel>
-            <Action.OpenInBrowser title="Visit OpenProject Website" url="https://www.openproject.org" />
+            <Action.OpenInBrowser title="Visit Openproject Website" url="https://www.openproject.org" />
           </ActionPanel>
         }
       >

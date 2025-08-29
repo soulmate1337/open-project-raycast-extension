@@ -14,8 +14,8 @@ export function EmptyView({ title, description, icon = "📋" }: EmptyViewProps)
       description={description}
       actions={
         <ActionPanel>
-          <Action.OpenInBrowser title="Visit OpenProject Website" url="https://www.openproject.org" />
-          <Action.OpenInBrowser title="OpenProject Documentation" url="https://www.openproject.org/docs/" />
+          <Action.OpenInBrowser title="Visit Openproject Website" url="https://www.openproject.org" />
+          <Action.OpenInBrowser title="Openproject Documentation" url="https://www.openproject.org/docs/" />
         </ActionPanel>
       }
     />

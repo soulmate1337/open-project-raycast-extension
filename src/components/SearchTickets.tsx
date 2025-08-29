@@ -33,16 +33,16 @@ export function SearchTickets({ onSelect, initialTicketId }: SearchTicketsProps)
             const ticket = await apiInstance.getWorkPackage(parseInt(initialTicketId));
             onSelect(ticket);
           } catch (error) {
-            showFailureToast(error, { 
-              title: "Ticket not found", 
-              message: `Ticket #${initialTicketId} could not be loaded` 
+            showFailureToast(error, {
+              title: "Ticket not found",
+              message: `Ticket #${initialTicketId} could not be loaded`,
             });
           }
         }
       } catch (error) {
-        showFailureToast(error, { 
-          title: "Configuration Error", 
-          message: "Please check your OpenProject settings in Raycast preferences" 
+        showFailureToast(error, {
+          title: "Configuration Error",
+          message: "Please check your OpenProject settings in Raycast preferences",
         });
       }
     }
